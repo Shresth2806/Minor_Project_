@@ -5,18 +5,17 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
-class SplashScreen : AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Thread.sleep(3000)
-        installSplashScreen()
+        setContentView(R.layout.activity_splash_screen)
 
-        setContentView(R.layout.activity_splesh_screen)
-
-
+        Handler(Looper.getMainLooper()).postDelayed({
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }, 3000)
     }
 }
