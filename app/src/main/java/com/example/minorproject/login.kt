@@ -3,12 +3,12 @@ package com.example.minorproject
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import android.widget.PopupMenu
+import android.widget.ImageButton
 
 class Login : AppCompatActivity() {
 
@@ -20,14 +20,11 @@ class Login : AppCompatActivity() {
         val loginButton = findViewById<Button>(R.id.loginButton)
         val googleButton = findViewById<ImageButton>(R.id.googleButton)
         val facebookButton = findViewById<ImageButton>(R.id.facebookButton)
-        val moreOptionsButton =
-            findViewById<LinearLayout>(R.id.moreOptionsButton)
-        val forgotPassword =
-            findViewById<TextView>(R.id.forgotPassword)
-        val signUpText =
-            findViewById<TextView>(R.id.signUpText)
+        val moreOptionsButton = findViewById<LinearLayout>(R.id.moreOptionsButton)
+        val forgotPassword = findViewById<TextView>(R.id.forgotPassword)
+        val signUpText = findViewById<TextView>(R.id.signUpText)
 
-        // Login
+        // Normal Login
         loginButton.setOnClickListener {
             Toast.makeText(
                 this,
@@ -36,7 +33,7 @@ class Login : AppCompatActivity() {
             ).show()
         }
 
-        // Google
+        // Google Login
         googleButton.setOnClickListener {
             Toast.makeText(
                 this,
@@ -45,7 +42,7 @@ class Login : AppCompatActivity() {
             ).show()
         }
 
-        // Facebook
+        // Facebook Login
         facebookButton.setOnClickListener {
             Toast.makeText(
                 this,
@@ -63,24 +60,19 @@ class Login : AppCompatActivity() {
             ).show()
         }
 
-        // Sign Up → Create Account
+        // Sign Up
         signUpText.setOnClickListener {
-
-            val intent = Intent(
+            Toast.makeText(
                 this,
-                createacount::class.java
-            )
-
-            startActivity(intent)
+                "Sign Up selected",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        // More Options
+        // Three-dot More Options
         moreOptionsButton.setOnClickListener {
 
-            val popupMenu = PopupMenu(
-                this,
-                moreOptionsButton
-            )
+            val popupMenu = PopupMenu(this, moreOptionsButton)
 
             popupMenu.menu.add("Login with Mobile Number")
             popupMenu.menu.add("Other Login Options")
@@ -91,16 +83,12 @@ class Login : AppCompatActivity() {
 
                     "Login with Mobile Number" -> {
 
-                        val intent = Intent(
-                            this,
-                            MobileLogin::class.java
-                        )
+                        val intent = Intent(this, MobileLogin::class.java)
 
                         startActivity(intent)
                     }
 
                     "Other Login Options" -> {
-
                         Toast.makeText(
                             this,
                             "Other login options selected",
