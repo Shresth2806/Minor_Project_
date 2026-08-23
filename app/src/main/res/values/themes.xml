@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.MinorProject"
-        parent="Theme.AppCompat.Light.NoActionBar">
+        parent="Theme.MaterialComponents.Light.NoActionBar">
 
         <item name="android:fontFamily">sans</item>
 
@@ -11,6 +11,13 @@
         <item name="android:colorAccent">#1976D2</item>
 
         <item name="android:navigationBarColor">#000000</item>
+
+        <item name="colorPrimary">#1769E0</item>
+        <item name="colorPrimaryVariant">#1769E0</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <item name="colorSecondary">#1769E0</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
 
     </style>
 
