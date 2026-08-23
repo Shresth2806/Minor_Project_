@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "294255914642",
+    "project_id": "doctor-recommendation-sy-3ef61",
+    "storage_bucket": "doctor-recommendation-sy-3ef61.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:294255914642:android:c8a2d91ee54e16e941c04b",
+        "android_client_info": {
+          "package_name": "com.example.minorproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkjfK8lCh6uJK_qVUElhy4MdXK6SXmTBw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
