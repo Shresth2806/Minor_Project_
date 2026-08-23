@@ -22,6 +22,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 
 import kotlinx.coroutines.launch
 
@@ -37,17 +38,8 @@ class Login : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-
         // Firebase
         auth = FirebaseAuth.getInstance()
-        if (auth.currentUser != null) {
-            Toast.makeText(
-                this,
-                "Already logged in as ${auth.currentUser?.displayName}",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-
 
         // Credential Manager
         credentialManager = CredentialManager.create(this)
@@ -57,23 +49,29 @@ class Login : AppCompatActivity() {
         // FIND VIEWS
         // ---------------------------------------------------------
 
-        val loginButton =
-            findViewById<Button>(R.id.loginButton)
+        val loginButton = findViewById<Button>(
+            R.id.loginButton
+        )
 
-        val googleButton =
-            findViewById<ImageButton>(R.id.googleButton)
+        val googleButton = findViewById<ImageButton>(
+            R.id.googleButton
+        )
 
-        val facebookButton =
-            findViewById<ImageButton>(R.id.facebookButton)
+        val facebookButton = findViewById<ImageButton>(
+            R.id.facebookButton
+        )
 
-        val moreOptionsButton =
-            findViewById<LinearLayout>(R.id.moreOptionsButton)
+        val moreOptionsButton = findViewById<LinearLayout>(
+            R.id.moreOptionsButton
+        )
 
-        val forgotPassword =
-            findViewById<TextView>(R.id.forgotPassword)
+        val forgotPassword = findViewById<TextView>(
+            R.id.forgotPassword
+        )
 
-        val signUpText =
-            findViewById<TextView>(R.id.signUpText)
+        val signUpText = findViewById<TextView>(
+            R.id.signUpText
+        )
 
 
         // ---------------------------------------------------------
@@ -148,12 +146,10 @@ class Login : AppCompatActivity() {
 
         moreOptionsButton.setOnClickListener {
 
-            val popupMenu =
-                PopupMenu(
-                    this,
-                    moreOptionsButton
-                )
-
+            val popupMenu = PopupMenu(
+                this,
+                moreOptionsButton
+            )
 
             popupMenu.menu.add(
                 "Login with Mobile Number"
@@ -170,15 +166,13 @@ class Login : AppCompatActivity() {
 
                     "Login with Mobile Number" -> {
 
-                        val intent =
-                            Intent(
-                                this,
-                                MobileLogin::class.java
-                            )
+                        val intent = Intent(
+                            this,
+                            MobileLogin::class.java
+                        )
 
                         startActivity(intent)
                     }
-
 
                     "Other Login Options" -> {
 
@@ -193,7 +187,6 @@ class Login : AppCompatActivity() {
                 true
             }
 
-
             popupMenu.show()
         }
     }
@@ -205,25 +198,34 @@ class Login : AppCompatActivity() {
 
     private fun startGoogleSignIn() {
 
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setServerClientId(
-                getString(R.string.default_web_client_id)
-            )
-            .setFilterByAuthorizedAccounts(false)
-            .build()
+        val googleIdOption =
+            GetGoogleIdOption.Builder()
+                .setServerClientId(
+                    getString(
+                        R.string.default_web_client_id
+                    )
+                )
+                .setFilterByAuthorizedAccounts(false)
+                .build()
 
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
+
+        val request =
+            GetCredentialRequest.Builder()
+                .addCredentialOption(
+                    googleIdOption
+                )
+                .build()
+
 
         lifecycleScope.launch {
 
             try {
 
-                val result = credentialManager.getCredential(
-                    context = this@Login,
-                    request = request
-                )
+                val result =
+                    credentialManager.getCredential(
+                        context = this@Login,
+                        request = request
+                    )
 
                 handleGoogleSignIn(result)
 
@@ -263,10 +265,9 @@ class Login : AppCompatActivity() {
             try {
 
                 val googleIdTokenCredential =
-                    GoogleIdTokenCredential
-                        .createFrom(
-                            credential.data
-                        )
+                    GoogleIdTokenCredential.createFrom(
+                        credential.data
+                    )
 
 
                 val idToken =
@@ -283,7 +284,6 @@ class Login : AppCompatActivity() {
             ) {
 
                 e.printStackTrace()
-
 
                 Toast.makeText(
                     this,
@@ -321,37 +321,136 @@ class Login : AppCompatActivity() {
         auth.signInWithCredential(
             credential
         )
-
             .addOnCompleteListener(this) { task ->
 
                 if (task.isSuccessful) {
 
-                    val user =
-                        auth.currentUser
-
+                    val user = auth.currentUser
 
                     Toast.makeText(
                         this,
                         "Welcome ${user?.displayName ?: "User"}!",
-                        Toast.LENGTH_LONG
+                        Toast.LENGTH_SHORT
                     ).show()
 
+                    val preferences = getSharedPreferences(
+                        "DocRecommProfile",
+                        MODE_PRIVATE
+                    )
 
-                    // Google login successful.
-                    //
-                    // Later we will put:
-                    // startActivity(...)
-                    // here to open your Home page.
+                    val profileCompleted =
+                        preferences.getBoolean("profileCompleted", false)
 
+                    if (profileCompleted) {
+
+                        // Returning user → Home
+                        val intent = Intent(
+                            this@Login,
+                            MainActivity::class.java
+                        )
+
+                        startActivity(intent)
+
+                    } else {
+
+                        // First-time user → Profile Setup
+                        val intent = Intent(
+                            this@Login,
+                            ProfileSetupActivity::class.java
+                        )
+
+                        startActivity(intent)
+                    }
+
+                    finish()
 
                 } else {
 
                     Toast.makeText(
-                        this,
-                        "Firebase Google Login failed",
+                        this@Login,
+                        "Firebase Google Login failed: ${task.exception?.message}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
             }
+    }
+
+
+    // =========================================================
+    // CHECK USER PROFILE
+    // =========================================================
+
+    private fun checkUserProfile(
+        uid: String
+    ) {
+
+        val db =
+            FirebaseFirestore.getInstance()
+
+
+        db.collection("users")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { document ->
+
+                if (
+                    document.exists() &&
+                    document.getBoolean(
+                        "profileCompleted"
+                    ) == true
+                ) {
+
+                    // Profile already completed
+                    openHome()
+
+                } else {
+
+                    // First login
+                    // or profile not completed
+                    openProfileSetup()
+                }
+            }
+            .addOnFailureListener { exception ->
+
+                Toast.makeText(
+                    this,
+                    "Unable to check profile: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+    }
+
+
+    // =========================================================
+    // OPEN PROFILE SETUP
+    // =========================================================
+
+    private fun openProfileSetup() {
+
+        val intent = Intent(
+            this,
+            ProfileSetupActivity::class.java
+        )
+
+        startActivity(intent)
+
+        finish()
+    }
+
+
+    // =========================================================
+    // OPEN HOME
+    // =========================================================
+
+    private fun openHome() {
+
+        val intent = Intent(
+            this,
+            MainActivity::class.java
+        )
+
+        startActivity(intent)
+
+        finish()
     }
 }
