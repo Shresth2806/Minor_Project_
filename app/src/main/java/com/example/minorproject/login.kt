@@ -40,6 +40,14 @@ class Login : AppCompatActivity() {
 
         // Firebase
         auth = FirebaseAuth.getInstance()
+        if (auth.currentUser != null) {
+            Toast.makeText(
+                this,
+                "Already logged in as ${auth.currentUser?.displayName}",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
 
         // Credential Manager
         credentialManager = CredentialManager.create(this)
