@@ -6,7 +6,7 @@
 
         <item name="android:fontFamily">sans</item>
 
-        <item name="android:windowFullscreen">true</item>
+
 
         <item name="android:colorAccent">#1976D2</item>
 
