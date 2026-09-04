@@ -1,175 +1,241 @@
 package com.example.minorproject
 
-import android.graphics.Color
+import android.content.Intent
 import android.os.Bundle
-import android.text.InputType
-import android.text.method.PasswordTransformationMethod
-import android.text.method.HideReturnsTransformationMethod
-import android.view.MotionEvent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
+
+import com.google.firebase.auth.FirebaseAuth
+
 
 class createacount : AppCompatActivity() {
 
-    private lateinit var etFullName: EditText
-    private lateinit var etEmail: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var etConfirmPassword: EditText
-    private lateinit var btnSignUp: Button
-    private lateinit var tvLogin: TextView
+    private lateinit var auth: FirebaseAuth
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
+
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_createacount)
+        setContentView(
+            R.layout.activity_createacount
+        )
 
-        window.statusBarColor = Color.rgb(248, 249, 252)
-        window.navigationBarColor = Color.rgb(248, 249, 252)
 
-        etFullName = findViewById(R.id.etFullName)
-        etEmail = findViewById(R.id.etEmail)
-        etPassword = findViewById(R.id.etPassword)
-        etConfirmPassword = findViewById(R.id.etConfirmPassword)
+        // Firebase
+        auth = FirebaseAuth.getInstance()
 
-        btnSignUp = findViewById(R.id.btnSignUp)
-        tvLogin = findViewById(R.id.tvLogin)
 
-        setupPasswordToggle(etPassword)
-        setupPasswordToggle(etConfirmPassword)
+        val fullName =
+            findViewById<EditText>(
+                R.id.etFullName
+            )
 
-        // Sign Up button
-        btnSignUp.setOnClickListener {
-            createAccount()
+        val email =
+            findViewById<EditText>(
+                R.id.etEmail
+            )
+
+        val password =
+            findViewById<EditText>(
+                R.id.etPassword
+            )
+
+        val confirmPassword =
+            findViewById<EditText>(
+                R.id.etConfirmPassword
+            )
+
+        val signUpButton =
+            findViewById<Button>(
+                R.id.btnSignUp
+            )
+
+        val loginText =
+            findViewById<TextView>(
+                R.id.tvLogin
+            )
+
+
+        // ------------------------------------------
+        // CREATE ACCOUNT
+        // ------------------------------------------
+
+        signUpButton.setOnClickListener {
+
+            val name =
+                fullName.text.toString().trim()
+
+            val userEmail =
+                email.text.toString().trim()
+
+            val userPassword =
+                password.text.toString()
+
+            val confirm =
+                confirmPassword.text.toString()
+
+
+            if (name.isEmpty()) {
+
+                fullName.error =
+                    "Enter your full name"
+
+                fullName.requestFocus()
+
+                return@setOnClickListener
+            }
+
+
+            if (userEmail.isEmpty()) {
+
+                email.error =
+                    "Enter your email"
+
+                email.requestFocus()
+
+                return@setOnClickListener
+            }
+
+
+            if (!android.util.Patterns.EMAIL_ADDRESS
+                    .matcher(userEmail)
+                    .matches()
+            ) {
+
+                email.error =
+                    "Enter a valid email"
+
+                email.requestFocus()
+
+                return@setOnClickListener
+            }
+
+
+            if (userPassword.length < 6) {
+
+                password.error =
+                    "Password must contain at least 6 characters"
+
+                password.requestFocus()
+
+                return@setOnClickListener
+            }
+
+
+            if (userPassword != confirm) {
+
+                confirmPassword.error =
+                    "Passwords do not match"
+
+                confirmPassword.requestFocus()
+
+                return@setOnClickListener
+            }
+
+
+            createFirebaseAccount(
+                name,
+                userEmail,
+                userPassword
+            )
         }
 
-        // Login
-        tvLogin.setOnClickListener {
+
+        // ------------------------------------------
+        // LOGIN
+        // ------------------------------------------
+
+        loginText.setOnClickListener {
+
             finish()
         }
     }
 
-    private fun createAccount() {
 
-        val name = etFullName.text.toString().trim()
-        val email = etEmail.text.toString().trim()
-        val password = etPassword.text.toString()
-        val confirmPassword =
-            etConfirmPassword.text.toString()
+    // ==================================================
+    // FIREBASE ACCOUNT CREATION
+    // ==================================================
 
-        // Name
-        if (name.isEmpty()) {
-            etFullName.error = "Enter your full name"
-            etFullName.requestFocus()
-            return
-        }
+    private fun createFirebaseAccount(
+        name: String,
+        email: String,
+        password: String
+    ) {
 
-        // Email
-        if (email.isEmpty()) {
-            etEmail.error = "Enter your email"
-            etEmail.requestFocus()
-            return
-        }
+        auth.createUserWithEmailAndPassword(
+            email,
+            password
+        )
+            .addOnCompleteListener(this) { task ->
 
-        if (!android.util.Patterns.EMAIL_ADDRESS
-                .matcher(email)
-                .matches()
-        ) {
-            etEmail.error = "Enter a valid email"
-            etEmail.requestFocus()
-            return
-        }
+                if (task.isSuccessful) {
 
-        // Password
-        if (password.isEmpty()) {
-            etPassword.error = "Create a password"
-            etPassword.requestFocus()
-            return
-        }
+                    val user =
+                        auth.currentUser
 
-        if (password.length < 6) {
-            etPassword.error =
-                "Password must be at least 6 characters"
-            etPassword.requestFocus()
-            return
-        }
 
-        // Confirm Password
-        if (confirmPassword.isEmpty()) {
-            etConfirmPassword.error =
-                "Confirm your password"
-            etConfirmPassword.requestFocus()
-            return
-        }
+                    // Save user's name
+                    val profile =
+                        getSharedPreferences(
+                            "DocRecommProfile",
+                            MODE_PRIVATE
+                        )
 
-        // Password match
-        if (password != confirmPassword) {
-            etConfirmPassword.error =
-                "Passwords do not match"
-            etConfirmPassword.requestFocus()
-            return
-        }
 
-        Toast.makeText(
-            this,
-            "Account created successfully!",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
+                    profile.edit()
+                        .putString(
+                            "name",
+                            name
+                        )
+                        .putString(
+                            "email",
+                            email
+                        )
+                        .putBoolean(
+                            "profileCompleted",
+                            false
+                        )
+                        .apply()
 
-    private fun setupPasswordToggle(editText: EditText) {
 
-        var passwordVisible = false
+                    Toast.makeText(
+                        this,
+                        "Account created successfully!",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-        editText.setOnTouchListener { view, event ->
 
-            if (event.action == MotionEvent.ACTION_UP) {
+                    // ----------------------------------
+                    // OPEN PROFILE SETUP
+                    // ----------------------------------
 
-                val drawable =
-                    editText.compoundDrawables[2]
+                    val intent =
+                        Intent(
+                            this,
+                            ProfileSetupActivity::class.java
+                        )
 
-                if (drawable != null &&
-                    event.x >= editText.width -
-                    editText.paddingEnd -
-                    drawable.bounds.width()
-                ) {
 
-                    val position =
-                        editText.selectionStart
+                    startActivity(intent)
 
-                    passwordVisible =
-                        !passwordVisible
-
-                    if (passwordVisible) {
-
-                        editText.transformationMethod =
-                            HideReturnsTransformationMethod
-                                .getInstance()
-
-                    } else {
-
-                        editText.transformationMethod =
-                            PasswordTransformationMethod
-                                .getInstance()
-                    }
-
-                    editText.setSelection(
-                        position.coerceAtLeast(0)
-                    )
-
-                    view.performClick()
-
-                    true
+                    finish()
 
                 } else {
-                    false
-                }
 
-            } else {
-                false
+                    Toast.makeText(
+                        this,
+                        task.exception?.message
+                            ?: "Account creation failed",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-        }
     }
 }

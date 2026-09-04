@@ -9,48 +9,100 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MinorProject">
+
+        <!-- ===================== -->
+        <!-- SPLASH - ONLY LAUNCHER -->
+        <!-- ===================== -->
+
         <activity
             android:name=".SplashActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
+
+        <!-- ===================== -->
+        <!-- MAIN ACTIVITY -->
+        <!-- ===================== -->
+
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+
+
+        <!-- ===================== -->
+        <!-- LOGIN -->
+        <!-- ===================== -->
+
         <activity
             android:name=".Login"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
+        <!-- ===================== -->
+        <!-- MOBILE LOGIN -->
+        <!-- ===================== -->
 
         <activity
             android:name=".MobileLogin"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- ===================== -->
+        <!-- CREATE ACCOUNT -->
+        <!-- ===================== -->
+
         <activity
             android:name=".createacount"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
+        <!-- ===================== -->
+        <!-- PROFILE SETUP -->
+        <!-- ===================== -->
+
         <activity
             android:name=".ProfileSetupActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- ===================== -->
+        <!-- PROFILE -->
+        <!-- ===================== -->
+
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
+
+
+        <!-- ===================== -->
+        <!-- SYMPTOM SELECTION -->
+        <!-- ===================== -->
+
+        <activity
+            android:name=".SymptomActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+
+        <!-- ===================== -->
+        <!-- HEALTH CHATBOT -->
+        <!-- ===================== -->
+
+        <activity
+            android:name=".ChatbotActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

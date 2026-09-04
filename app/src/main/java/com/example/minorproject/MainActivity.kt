@@ -135,11 +135,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         cardSymptoms.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Symptoms selected",
-                Toast.LENGTH_SHORT
-            ).show()
+
+            startActivity(
+                Intent(
+                    this,
+                    SymptomActivity::class.java
+                )
+            )
         }
 
         cardHealthInfo.setOnClickListener {
