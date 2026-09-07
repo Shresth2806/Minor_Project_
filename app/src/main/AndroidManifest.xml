@@ -17,14 +17,12 @@
         <activity
             android:name=".SplashActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
 
         <!-- ===================== -->
         <!-- MAIN ACTIVITY -->
@@ -33,7 +31,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
 
         <!-- ===================== -->
         <!-- LOGIN -->
@@ -44,7 +41,6 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
         <!-- ===================== -->
         <!-- MOBILE LOGIN -->
         <!-- ===================== -->
@@ -53,7 +49,6 @@
             android:name=".MobileLogin"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
-
 
         <!-- ===================== -->
         <!-- CREATE ACCOUNT -->
@@ -64,7 +59,6 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
         <!-- ===================== -->
         <!-- PROFILE SETUP -->
         <!-- ===================== -->
@@ -74,7 +68,6 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
         <!-- ===================== -->
         <!-- PROFILE -->
         <!-- ===================== -->
@@ -82,7 +75,6 @@
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
-
 
         <!-- ===================== -->
         <!-- SYMPTOM SELECTION -->
@@ -93,7 +85,6 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-
         <!-- ===================== -->
         <!-- HEALTH CHATBOT -->
         <!-- ===================== -->
@@ -102,7 +93,46 @@
             android:name=".ChatbotActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ManualSymptomActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".GeneralPhysicianActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ProcessingActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".RecommendationActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
